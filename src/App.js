@@ -5,12 +5,13 @@ import ImageLinkForm from "./components/ImageLinkForm/ImageLinkForm";
 import Rank from "./components/Rank/Rank";
 import FaceRecognition from "./components/FaceRecognition/FaceRecognition";
 import ParticlesBg from "particles-bg";
-import Clarifai from "clarifai";
+// import Clarifai from "clarifai";
 import "./App.css";
 
-const app = new Clarifai.App({
-	apiKey: "b2977460c0b442b8a027080ec68659b2",
-});
+// const app = new Clarifai.App({
+// 	apiKey: "b2977460c0b442b8a027080ec68659b2",
+// });
+
 //* ******************************************************* *//
 // CLARIFY API CALL //
 //* ******************************************************* *//
@@ -26,7 +27,7 @@ const returnClarifaiJSONRequest = (imageUrl) => {
 	const USER_ID = "njayem";
 	const APP_ID = "SmartBrain";
 	// Change these to whatever model and image URL you want to use
-	const IMAGE_URL = "https://samples.clarifai.com/metro-north.jpg";
+	const IMAGE_URL = imageUrl;
 
 	///////////////////////////////////////////////////////////////////////////////////
 	// YOU DO NOT NEED TO CHANGE ANYTHING BELOW THIS LINE TO RUN THIS EXAMPLE
@@ -69,12 +70,35 @@ class App extends Component {
 		this.state = {
 			input: "",
 			imageUrl: "",
+			box: {},
 		};
 	}
 
-	// displayFaceBox = (box) => {
-	// 	this.setState({ box: box });
-	// };
+	calculateFaceLocation = (data) => {
+		const clarifaiFace =
+			data.outputs[0].data.regions[0].region_info.bounding_box;
+
+		console.log("Clarifai Face Location Data:", clarifaiFace);
+
+		const image = document.getElementById("inputimage");
+		const width = Number(image.width);
+		console.log("width:", width);
+		const height = Number(image.height);
+		console.log("height:", height);
+
+		return {
+			left_col: clarifaiFace.left_col * width,
+			top_row: clarifaiFace.top_row * height,
+			right_col: width - clarifaiFace.right_col * width,
+			bottom_row: height - clarifaiFace.bottom_row * height,
+		};
+	};
+
+	// This updates the box state
+	displayFaceBox = (box) => {
+		console.log("BOX OBJECT:", box);
+		this.setState({ box: box });
+	};
 
 	// We need to create a function that will listen to the input change
 	// and update the state
@@ -83,31 +107,27 @@ class App extends Component {
 	};
 
 	onButtonSubmit = () => {
+		console.log("click");
 		this.setState({ imageUrl: this.state.input });
+		console.log("the state input is:", this.state.input);
 
-		app.models
-			.predict("face-detection", this.state.input)
-			.then((response) => {
-				console.log("hi", response);
-				if (response) {
-					fetch("http://localhost:3000/image", {
-						method: "put",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({
-							id: this.state.user.id,
-						}),
-					}).then((response) => response.json());
-					// .then((count) => {
-					// 	this.setState(Object.assign(this.state.user, { entries: count }));
-					// });
-				}
-
-				// this.desplayFaceBox(this.calculateFaceLocation(response));
+		fetch(
+			"https://api.clarifai.com/v2/models/" + "face-detection" + "/outputs",
+			returnClarifaiJSONRequest(this.state.input)
+		)
+			.then((response) => response.json())
+			// .then((result) => console.log("response:", result))
+			.then((result) => {
+				this.displayFaceBox(this.calculateFaceLocation(result));
 			})
-			.catch((err) => console.log(err));
+			.catch((error) => console.log("error", error));
 	};
+
 	render() {
-		const { imageUrl } = this.state;
+		const { imageUrl, box } = this.state;
+		console.log("imageUrl:", imageUrl);
+		console.log("box:", box);
+
 		return (
 			<div className="App">
 				<ParticlesBg color="#ffffff" type="cobweb" bg={true} num={300} />
@@ -118,7 +138,7 @@ class App extends Component {
 					onInputChange={this.onInputChange}
 					onButtonSubmit={this.onButtonSubmit}
 				/>
-				<FaceRecognition imageUrl={imageUrl} />
+				<FaceRecognition imageUrl={imageUrl} box={box} />
 			</div>
 		);
 	}
