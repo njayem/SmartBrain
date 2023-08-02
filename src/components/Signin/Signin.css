@@ -1,0 +1,11 @@
+.register {
+	cursor: "pointer";
+}
+
+.register:hover {
+	cursor: pointer;
+	color: "white";
+	font-weight: bold;
+	background-color: white;
+	text-decoration: underline;
+}
