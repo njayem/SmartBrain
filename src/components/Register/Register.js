@@ -17,13 +17,13 @@ class Register extends Component {
 	// We need to create an onEmailChange function
 	// that will listen to the onChange event of the email input
 	onEmailChange = (event) => {
-		this.setState({ signInEmail: event.target.value });
+		this.setState({ email: event.target.value });
 	};
 
 	// We need to create an onPasswordChange function
 	// that will listen to the onChange event of the password input
 	onPasswordChange = (event) => {
-		this.setState({ signInPassword: event.target.value });
+		this.setState({ password: event.target.value });
 	};
 
 	onRegister = () => {
