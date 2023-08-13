@@ -64,6 +64,22 @@ const returnClarifaiJSONRequest = (imageUrl) => {
 //* ******************************************************* *//
 //* ******************************************************* *//
 
+// CREATE AN INITIAL STATE FOR THE APP
+const initialState = {
+	input: "",
+	imageUrl: "",
+	box: {},
+	route: "signin",
+	isSignedIn: false,
+	user: {
+		id: "",
+		name: "",
+		email: "",
+		entries: 0,
+		joined: "",
+	},
+};
+
 class App extends Component {
 	//We need to keep track of the input value in the input box
 	//So we need to create a state using constructor
@@ -163,7 +179,7 @@ class App extends Component {
 
 	onRouteChange = (route) => {
 		if (route === "signout") {
-			this.setState({ isSignedIn: false });
+			this.setState({ initialState });
 		} else if (route === "home") {
 			this.setState({ isSignedIn: true });
 		}
