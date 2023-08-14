@@ -85,20 +85,7 @@ class App extends Component {
 	//So we need to create a state using constructor
 	constructor() {
 		super();
-		this.state = {
-			input: "",
-			imageUrl: "",
-			box: {},
-			route: "signin",
-			isSignedIn: false,
-			user: {
-				id: "",
-				name: "",
-				email: "",
-				entries: 0,
-				joined: "",
-			},
-		};
+		this.state = initialState;
 	}
 
 	loadUser = (data) => {
@@ -149,7 +136,7 @@ class App extends Component {
 	onButtonSubmit = () => {
 		console.log("click");
 		this.setState({ imageUrl: this.state.input });
-		console.log("the state input is:", this.state.input);
+		//console.log("the state input is:", this.state.input);
 
 		fetch(
 			"https://api.clarifai.com/v2/models/" + "face-detection" + "/outputs",
@@ -158,7 +145,7 @@ class App extends Component {
 			.then((response) => response.json())
 			.then((result) => {
 				if (result) {
-					console.log("RESULTTT:", result);
+					//console.log("RESULTTT:", result);
 					fetch("http://localhost:3000/image", {
 						method: "put",
 						headers: { "Content-Type": "application/json" },
@@ -166,20 +153,23 @@ class App extends Component {
 							id: this.state.user.id,
 						}),
 					})
-						.then((response) => response.json())
+						.then((response) => {
+							response.json();
+						})
 						.then((count) => {
-							console.log("count:", count);
 							this.setState(Object.assign(this.state.user, { entries: count }));
-						});
-					this.displayFaceBox(this.calculateFaceLocation(result));
+							console.log("COUNT:", count);
+						})
+						.catch(console.log);
 				}
+				this.displayFaceBox(this.calculateFaceLocation(result));
 			})
 			.catch((error) => console.log("error", error));
 	};
 
 	onRouteChange = (route) => {
 		if (route === "signout") {
-			this.setState({ initialState });
+			this.setState(initialState);
 		} else if (route === "home") {
 			this.setState({ isSignedIn: true });
 		}
@@ -204,8 +194,6 @@ class App extends Component {
 						<Rank
 							name={this.state.user.name}
 							entries={this.state.user.entries}
-							loadUser={this.loadUser}
-							onRouteChange={this.onRouteChange}
 						/>
 						<ImageLinkForm
 							onInputChange={this.onInputChange}
