@@ -17,19 +17,19 @@ import bcrypt from "bcrypt-nodejs";
 import knex from "knex";
 
 // Import the register.js file
-import register from "./controllers/register.js";
+import { handleRegister } from "./controllers/register.js";
 // const register = require("./controllers/register");
 
 // Import the signin.js file
-import signin from "./controllers/signin.js";
+import { handleSignIn } from "./controllers/signin.js";
 // const signin = require("./controllers/signin");
 
 // Import the profile.js file
-import profile from "./controllers/profile.js";
+import { handleProfileGet } from "./controllers/profile.js";
 // const profile = require("./controllers/profile");
 
 // Import the image.js file
-import image from "./controllers/image.js";
+import { handleImage } from "./controllers/image.js";
 // const image = require("./controllers/image");
 
 const db = knex({
@@ -86,26 +86,26 @@ app.get("/", (req, res) => {
 // So we have to parse it to JS before we can check with the DB
 // We need to use body-parser to do this
 app.post("/signin", (req, res) => {
-	signin.handleSignIn(req, res, db, bcrypt);
+	handleSignIn(req, res, db, bcrypt);
 });
 // ********** ROUTE (/profile/:userId) ********** //
 
 // ********** ROUTE (/register) ********** //
 app.post("/register", (req, res) => {
-	register.handleRegister(req, res, db, bcrypt);
+	handleRegister(req, res, db, bcrypt);
 });
 
 // ********** ROUTE (/register) ********** //
 
 // ********** ROUTE (/profile/:userId) ********** //
 app.get("/profile/:id", (req, res) => {
-	profile.handleProfileGet(req, res, db);
+	handleProfileGet(req, res, db);
 });
 // ********** ROUTE (/profile/:userId) ********** //
 
 // ********** ROUTE (/image) ********** //
 app.put("/image", (req, res) => {
-	image.handleImage(req, res, db);
+	handleImage(req, res, db);
 });
 // ********** ROUTE (/image) ********** //
 

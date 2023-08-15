@@ -15,4 +15,4 @@ const handleImage = (req, res, db) => {
 		});
 };
 
-export default handleImage;
+export { handleImage };

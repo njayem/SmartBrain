@@ -39,4 +39,4 @@ const handleRegister = (req, res, db, bcrypt) => {
 	});
 };
 
-export default handleRegister;
+export { handleRegister };

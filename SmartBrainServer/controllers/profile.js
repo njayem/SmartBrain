@@ -17,5 +17,9 @@ const handleProfileGet = (req, res, db) => {
 			res.status(400).json("Error getting user!");
 		});
 };
-
-export default handleProfileGet;
+// This is a named export
+// This means that when we import this file in another file
+// Unlike default exports, which are used to export only a single
+// value or to set a fallback value for a module,
+// named exports allow us to export multiple values from a module.
+export { handleProfileGet };
