@@ -16,9 +16,9 @@
  
  ## Preview
  
-![image] (https://github.com/njayem/SmartBrain/blob/main/Preview/Register.png)
+![image](https://github.com/njayem/SmartBrain/blob/main/Preview/Register.png)
 
-![image] (https://github.com/njayem/SmartBrain/blob/main/Preview/Home.png)
+![image](https://github.com/njayem/SmartBrain/blob/main/Preview/Home.png)
 
-![image] (https://github.com/njayem/SmartBrain/blob/main/Preview/Sign%20In.png)
+![image](https://github.com/njayem/SmartBrain/blob/main/Preview/Sign%20In.png)
 
