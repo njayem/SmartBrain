@@ -5,6 +5,12 @@ const handleRegister = (req, res, db, bcrypt) => {
 	// that has been parsed by body-parser to JS
 	const { email, name, password } = req.body;
 
+	// We need to make sure that the user has entered all the info
+	// Blank information is not allowed
+	if (!email || !name || !password) {
+		return res.status(400).json("Incorrect form submission!");
+	}
+
 	// We need to hash the password before we store it in the DB
 	// We use bcrypt to do this
 	const hash = bcrypt.hashSync(password);
